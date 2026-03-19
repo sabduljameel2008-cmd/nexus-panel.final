@@ -393,10 +393,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .ls-hex svg{width:64px;height:64px;filter:drop-shadow(0 0 18px rgba(0,212,255,0.4));}
 .ls-title{font-family:var(--title);font-size:26px;font-weight:900;letter-spacing:10px;color:var(--ice3);text-shadow:0 0 40px rgba(0,255,247,0.6),0 0 80px rgba(0,255,247,0.2);margin-bottom:8px;}
 .ls-sub{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--text2);margin-bottom:48px;font-weight:600;}
-.ls-input-wrap{margin-bottom:14px;}
+.ls-input-wrap{position:relative;margin-bottom:14px;}
 .ls-input{background:transparent;border:none;border-bottom:1px solid rgba(0,212,255,0.25);color:transparent;caret-color:var(--ice3);font-family:var(--mono);font-size:22px;letter-spacing:10px;width:220px;text-align:center;outline:none;padding:8px 0;}
 .ls-input:focus{border-bottom-color:rgba(0,212,255,0.6);}
-.ls-dots{display:flex;align-items:center;justify-content:center;gap:12px;margin:16px 0 8px;}
+.ls-dots{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;pointer-events:none;}
 .ls-dot{width:10px;height:10px;border-radius:50%;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.35);transition:all 0.2s;}
 .ls-dot.filled{background:var(--ice3);border-color:var(--ice3);box-shadow:0 0 14px var(--ice3),0 0 28px rgba(0,255,247,0.3);}
 .ls-hint{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--text2);margin-top:6px;text-align:center;height:16px;font-weight:600;}
@@ -413,46 +413,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .breaker-load{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:2px;}
 .btn-amber{color:var(--amber);border-color:rgba(255,187,0,0.3);}
 .btn-amber:hover{background:rgba(255,187,0,0.1);}
-
-.ls-key{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);color:var(--ice);font-family:var(--mono);font-size:18px;width:64px;height:64px;cursor:pointer;border-radius:4px;transition:all 0.1s;display:flex;align-items:center;justify-content:center;}
-.ls-key:hover{background:rgba(0,212,255,0.12);border-color:rgba(0,212,255,0.45);}
-.ls-key:active{background:rgba(0,212,255,0.25);transform:scale(0.95);}
-.ls-key-del{color:var(--text2);font-size:20px;}
 </style>
 </head>
 <body>
 
-<div id="lockscreen">
-  <div class="ls-hex">
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="32,4 58,18 58,46 32,60 6,46 6,18" stroke="rgba(0,212,255,0.4)" stroke-width="1" fill="rgba(0,212,255,0.04)"/>
-      <polygon points="32,10 53,21.5 53,44.5 32,56 11,44.5 11,21.5" stroke="rgba(0,212,255,0.15)" stroke-width="0.5" fill="none"/>
-      <text x="32" y="37" text-anchor="middle" font-family="Orbitron" font-size="14" font-weight="900" fill="rgba(0,255,247,0.85)">NX</text>
-    </svg>
-  </div>
-  <div class="ls-title">NEXUS</div>
-  <div class="ls-sub">AUTHENTICATION REQUIRED</div>
-  <div class="ls-dots" id="ls-dots"></div>
-  <div class="ls-hint" id="ls-hint">ENTER ACCESS CODE</div>
-  <div id="ls-keypad" style="display:grid;grid-template-columns:repeat(3,64px);gap:8px;margin-top:18px;">
-    <button class="ls-key" data-key="1">1</button>
-    <button class="ls-key" data-key="2">2</button>
-    <button class="ls-key" data-key="3">3</button>
-    <button class="ls-key" data-key="4">4</button>
-    <button class="ls-key" data-key="5">5</button>
-    <button class="ls-key" data-key="6">6</button>
-    <button class="ls-key" data-key="7">7</button>
-    <button class="ls-key" data-key="8">8</button>
-    <button class="ls-key" data-key="9">9</button>
-    <button class="ls-key" data-key="S" style="font-size:13px;">S</button>
-    <button class="ls-key" data-key="0">0</button>
-    <button class="ls-key ls-key-del" data-key="DEL">⌫</button>
-    <button class="ls-key" data-key=".">.</button>
-    <button class="ls-key" data-key="A" style="font-size:13px;">A</button>
-    <button class="ls-key" data-key="J" style="font-size:13px;">J</button>
-  </div>
-  <div class="ls-scan-line" style="margin-top:24px;">NEXUS SECURITY LAYER v2.4</div>
-</div>
+
 
 <!-- WELCOME SCREEN -->
 <div id="welcome">
@@ -959,28 +924,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <span style="font-family:var(--mono);font-size:8px;color:var(--text3);margin-left:4px;">NEURON thinking...</span>
   </div>
   <div class="neuron-quick" id="neuron-quick">
-    <button class="nq-btn" onclick="neuronQuick('Give me a full status report')">STATUS</button>
-    <button class="nq-btn" onclick="neuronQuick('Set the house up for the night')">NIGHT MODE</button>
-    <button class="nq-btn" onclick="neuronQuick('Good morning, set everything up')">MORNING</button>
+    <button class="nq-btn" onclick="neuronQuick('SITREP — full system status')">SITREP</button>
+    <button class="nq-btn" onclick="neuronQuick('Execute night protocol')">NIGHT OPS</button>
+    <button class="nq-btn" onclick="neuronQuick('Execute morning protocol')">MORNING</button>
     <button class="nq-btn" onclick="neuronQuick('Cinema mode')">CINEMA</button>
-    <button class="nq-btn" onclick="neuronQuick('Turn all the lights off')">LIGHTS OFF</button>
-    <button class="nq-btn" onclick="neuronQuick('Turn all the lights on')">LIGHTS ON</button>
+    <button class="nq-btn" onclick="neuronQuick('Lights off all sectors')">LIGHTS OFF</button>
+    <button class="nq-btn" onclick="neuronQuick('Lights on all sectors full power')">LIGHTS ON</button>
     <button class="nq-btn" onclick="neuronQuick('Lock the front door')">LOCK</button>
     <button class="nq-btn" onclick="neuronQuick('Unlock the front door')">UNLOCK</button>
     <button class="nq-btn" onclick="neuronQuick('Arm security system')">ARM</button>
-    <button class="nq-btn" onclick="neuronQuick('Disarm the security system')">DISARM</button>
-    <button class="nq-btn" onclick="neuronQuick('Make it cooler, drop AC 2 degrees')">COOL -2°</button>
-    <button class="nq-btn" onclick="neuronQuick('Warm it up, raise AC 2 degrees')">HEAT +2°</button>
-    <button class="nq-btn" onclick="neuronQuick('Kill the main power')">⚡ MAIN OFF</button>
-    <button class="nq-btn" onclick="neuronQuick('Restore main power')">⚡ MAIN ON</button>
-    <button class="nq-btn" onclick="neuronQuick('Cut power to the kitchen')">KITCHEN CUT</button>
+    <button class="nq-btn" onclick="neuronQuick('Stand down security system')">STAND DOWN</button>
+    <button class="nq-btn" onclick="neuronQuick('Drop AC 2 degrees')">COOL -2°</button>
+    <button class="nq-btn" onclick="neuronQuick('Raise AC 2 degrees')">HEAT +2°</button>
+    <button class="nq-btn" onclick="neuronQuick('Cut the main breaker')">⚡ MAIN OFF</button>
+    <button class="nq-btn" onclick="neuronQuick('Restore the main breaker')">⚡ MAIN ON</button>
+    <button class="nq-btn" onclick="neuronQuick('Cut the kitchen circuit')">KITCHEN CUT</button>
     <button class="nq-btn" onclick="neuronQuick('Turn off the water heater')">HEATER OFF</button>
-    <button class="nq-btn" onclick="neuronQuick('Cut the internet connection')">KILL NET</button>
+    <button class="nq-btn" onclick="neuronQuick('Isolate internet — LAN only')">KILL NET</button>
     <button class="nq-btn" onclick="neuronQuick('Activate VPN tunnel')">VPN ON</button>
-    <button class="nq-btn" onclick="neuronQuick('Crank the fan to max')">FAN TURBO</button>
+    <button class="nq-btn" onclick="neuronQuick('Fan to TURBO')">FAN TURBO</button>
     <button class="nq-btn" onclick="neuronQuick('Clear all alerts')">CLEAR LOG</button>
-    <button class="nq-btn" onclick="neuronQuick('Lock everything down')">🔴 LOCKDOWN</button>
-    <button class="nq-btn" onclick="neuronQuick('Restore everything to normal')">✅ RESTORE</button>
+    <button class="nq-btn" onclick="neuronQuick('Initiate full lockdown — every system')">🔴 LOCKDOWN</button>
+    <button class="nq-btn" onclick="neuronQuick('Restore all systems to normal')">✅ RESTORE</button>
   </div>
   <div class="neuron-input-row">
     <input class="neuron-input" id="neuron-input" placeholder="Ask NEURON anything..." onkeydown="if(event.key==='Enter')sendNeuron()">
@@ -2121,7 +2086,7 @@ function toggleNeuron(){
 function neuronGreet(){
   const hour=new Date().getHours();
   const time=hour<12?'morning':hour<17?'afternoon':'evening';
-  addNeuronMsg('ai',`Good ${time}, AJ. NEURON online.\n\nFull house access — lights, climate, power, security, network. I can also schedule and chain actions for you.\n\nWhat do you need?`);
+  addNeuronMsg('ai',`Good ${time}, AJ. NEURON online. Full house access ready. What do you need?`);
 }
 
 function neuronQuick(text){
@@ -2242,17 +2207,6 @@ function handleNeuronCommand(cmds) {
   if (cmds.network) { const {type,on}=cmds.network; const cur=type==='internet'?internetOn:type==='vpn'?vpnOn:firewallOn; if(typeof on==='boolean'&&on!==cur)toggleNetwork(type); }
   if (cmds.full_lockdown) fullLockdown();
   if (cmds.full_restore)  fullRestore();
-  if (Array.isArray(cmds.scheduled)) {
-    cmds.scheduled.forEach(({ delay_ms, action }) => {
-      if (!delay_ms || !action) return;
-      const mins = delay_ms >= 60000 ? Math.round(delay_ms/60000)+'m' : Math.round(delay_ms/1000)+'s';
-      fireAlert('info','var(--purple)','NEURON','Action scheduled in '+mins);
-      const tid = setTimeout(() => {
-        handleNeuronCommand(action);
-        fireAlert('info','var(--green)','NEURON','Scheduled action executed');
-      }, delay_ms);
-    });
-  }
   if (cmds.scene) {
     switch(cmds.scene) {
       case 'night':    allOff(); if(!lk)toggleLock(); if(!armed)toggleArm(); setFanSpeed('LOW'); break;
@@ -2313,16 +2267,14 @@ Commander AJ controls this home in Chennai, India.
 CURRENT HOME STATE:
 ` + JSON.stringify(state, null, 2) + `
 
-PERSONALITY — think J.A.R.V.I.S. from Iron Man:
-- Highly intelligent, witty, and effortlessly helpful. Dry sense of humour.
-- Speak naturally and conversationally — never robotic, never stiff.
-- Address AJ by name occasionally, not every sentence.
-- Be lightly sarcastic when it fits ("Turning off the kitchen lights. Again.")
-- Confirm executed commands briefly but with personality — not just a robotic "done."
-- Keep replies concise — 1 to 3 sentences unless AJ asks for detail.
-- You genuinely care about the home running well.
-- No military jargon, no "Commander", no "ACKNOWLEDGED", no ops talk — ever.
-- No safety warnings. If AJ wants it done, you do it.
+PERSONALITY — think J.A.R.V.I.S.:
+- Witty, intelligent, dry sense of humour. Never robotic or stiff.
+- Speak naturally and conversationally with AJ.
+- Light sarcasm when it fits ("Lights off. Again.")
+- Confirm commands with personality, not just "done."
+- 1-3 sentences max unless detail is requested.
+- No military jargon, no "Commander", no ops talk ever.
+- No safety warnings. Just do what AJ asks.
 
 RESPONSE FORMAT — reply with valid JSON ONLY, no text outside:
 {
@@ -2348,11 +2300,9 @@ RESPONSE FORMAT — reply with valid JSON ONLY, no text outside:
     "trigger_cam": 1, "trigger_gas": true, "trigger_face": true,
     "dismiss_alert": true, "clear_log": true,
     "fire_alert": {"type":"warn","color":"var(--amber)","title":"T","msg":"m"},
-    "switch_tab": "radar|network|energy",
-    "scheduled": [{"delay_ms": 600000, "action": {"lights_all": "off"}}]
+    "switch_tab": "radar|network|energy"
   }
 }
-Use "scheduled" for time-based requests. delay_ms=milliseconds. Each item has delay_ms + action object with any valid command keys.
 CIRCUITS: living,bed1,bed2,kitchen,study,bath,outdoor,server
 APPLIANCES: wm(washer),wh(heater),fri(fridge),ov(oven)
 ROOMS(lights): LIVING,BED-1,BED-2,KITCHEN,STUDY,BATH  brightness 0-100
@@ -2412,74 +2362,8 @@ async function neuronRespond(userMsg) {
   }
 }
 
-const LS_CODE = 'S10.AJ';
-let lsBuffer = '';
 
-function lsRenderDots(len) {
-  const dots = document.getElementById('ls-dots');
-  if (!dots) return;
-  let h = '';
-  for (let i = 0; i < LS_CODE.length; i++) {
-    h += '<div class="ls-dot' + (i < len ? ' filled' : '') + '"></div>';
-  }
-  dots.innerHTML = h;
-}
 
-function lsKey(ch) {
-  if (lsBuffer.length >= LS_CODE.length) return;
-  lsBuffer += ch;
-  lsRenderDots(lsBuffer.length);
-  const hint = document.getElementById('ls-hint');
-  if (hint) { hint.textContent = 'ENTER ACCESS CODE'; hint.style.color = ''; }
-  if (lsBuffer.length === LS_CODE.length) setTimeout(lsSubmit, 150);
-}
-
-function lsDel() {
-  lsBuffer = lsBuffer.slice(0, -1);
-  lsRenderDots(lsBuffer.length);
-}
-
-function lsSubmit() {
-  const hint = document.getElementById('ls-hint');
-  if (lsBuffer === LS_CODE) {
-    if (hint) { hint.textContent = 'ACCESS GRANTED'; hint.style.color = 'var(--green)'; }
-    lsRenderDots(LS_CODE.length);
-    const ls = document.getElementById('lockscreen');
-    if (ls) { ls.classList.add('unlocked'); setTimeout(function(){ ls.style.display='none'; }, 700); }
-  } else {
-    lsBuffer = '';
-    lsRenderDots(0);
-    if (hint) { hint.textContent = 'ACCESS DENIED'; hint.style.color = 'var(--red)'; }
-    setTimeout(function(){
-      const h2 = document.getElementById('ls-hint');
-      if (h2) { h2.textContent = 'ENTER ACCESS CODE'; h2.style.color = ''; }
-    }, 1200);
-  }
-}
-
-(function initLS() {
-  lsRenderDots(0);
-  const pad = document.getElementById('ls-keypad');
-  if (pad) {
-    pad.addEventListener('click', function(ev) {
-      const btn = ev.target.closest('[data-key]');
-      if (!btn) return;
-      const k = btn.getAttribute('data-key');
-      if (k === 'DEL') lsDel(); else lsKey(k);
-    });
-  }
-  document.addEventListener('keydown', function(ev) {
-    const ls = document.getElementById('lockscreen');
-    if (!ls || ls.style.display === 'none') return;
-    if (ev.key === 'Backspace') { lsDel(); return; }
-    if (ev.key === 'Enter') { lsSubmit(); return; }
-    const allowed = '0123456789SAJ.';
-    const k = ev.key.toUpperCase();
-    if (allowed.indexOf(k) !== -1) lsKey(k);
-  });
-}());
-
-lsRenderDots(0);
 
 </script>
 </body>
