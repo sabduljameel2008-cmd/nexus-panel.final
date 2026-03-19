@@ -289,7 +289,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .pms-label{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:2px;letter-spacing:1px;}
 
 /* NEURON AI */
-.neuron-toggle{position:fixed;bottom:60px;right:16px;z-index:4000;width:46px;height:46px;border-radius:50%;background:rgba(0,10,20,0.9);border:1px solid rgba(170,68,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 20px rgba(170,68,255,0.2);transition:all 0.2s;}
+.neuron-toggle{position:fixed;bottom:60px;right:16px;z-index:4000;border:1px solid rgba(170,68,255,0.5);background:rgba(0,10,20,0.9);outline:none;padding:0;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 20px rgba(170,68,255,0.2);transition:all 0.2s;}
 .neuron-toggle:hover{box-shadow:0 0 30px rgba(170,68,255,0.4);border-color:rgba(170,68,255,0.8);}
 .neuron-toggle svg{width:22px;height:22px;}
 .neuron-badge{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:var(--purple);border:2px solid var(--bg);animation:pulse 1.5s infinite;}
@@ -664,7 +664,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 
     <!-- POWER + FLOOR -->
     <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:9px;">
-      <div class="cpanel" id="pwr-panel" onclick="openPowerZoom()" style="cursor:zoom-in;">
+      <div class="cpanel" id="pwr-panel" style="cursor:zoom-in;">
         <div class="cpanel-hd"><span>⚡ POWER CONSUMPTION</span><div style="display:flex;align-items:center;gap:8px;"><span style="font-family:var(--mono);font-size:8px;color:var(--text3);">CLICK TO EXPAND</span><span id="pwr-live" style="color:var(--amber);font-size:9px;">2.4 kW</span></div></div>
         <canvas class="pwr-canvas" id="pwr-c"></canvas>
         <div class="pwr-stats">
@@ -718,9 +718,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- RIGHT COL -->
   <div class="rcol">
     <div class="tab-bar">
-      <div class="tab active" onclick="switchTab('radar')">RADAR</div>
-      <div class="tab" onclick="switchTab('network')">NETWORK</div>
-      <div class="tab" onclick="switchTab('energy')">ENERGY</div>
+      <div class="tab active" data-tab="radar">RADAR</div>
+      <div class="tab" data-tab="network">NETWORK</div>
+      <div class="tab" data-tab="energy">ENERGY</div>
     </div>
 
     <div class="col-scroll">
@@ -827,7 +827,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 </div>
 
 <!-- POWER ZOOM MODAL -->
-<div class="pwr-modal" id="pwr-modal" onclick="handlePwrClick(event)">
+<div class="pwr-modal" id="pwr-modal">
   <div class="pwr-modal-inner" id="pwr-inner">
     <div class="pwr-topbar">
       <span class="pwr-title">⚡ POWER INTELLIGENCE — DETAILED ANALYSIS</span>
@@ -838,7 +838,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <span>TODAY: <b>18.7kWh</b></span>
         <span>COST: <b style="color:var(--amber)">₹42.50</b></span>
       </div>
-      <button class="pwr-close" onclick="closePowerZoom()">✕ CLOSE</button>
+      <button class="pwr-close" id="pwr-close-btn">✕ CLOSE</button>
     </div>
     <div class="pwr-body">
       <!-- Q1: Live waveform -->
@@ -884,7 +884,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 </div>
 
 <!-- NEURON AI AGENT -->
-<div class="neuron-toggle" id="neuron-toggle" onclick="toggleNeuron()">
+<button class="neuron-toggle" id="neuron-toggle" aria-label="Open NEURON">
   <svg viewBox="0 0 24 24" fill="none" stroke="rgba(170,68,255,0.9)" stroke-width="1.5">
     <circle cx="12" cy="12" r="3"/>
     <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
@@ -892,7 +892,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <circle cx="12" cy="12" r="7" stroke-dasharray="2 2"/>
   </svg>
   <div class="neuron-badge"></div>
-</div>
+</button>
 
 <div class="neuron-panel" id="neuron-panel">
   <div class="neuron-head">
@@ -914,7 +914,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <input id="neuron-apikey" type="password"
       style="flex:1;background:rgba(170,68,255,0.05);border:1px solid rgba(170,68,255,0.18);color:rgba(210,180,255,0.85);font-family:var(--mono);font-size:9px;padding:5px 8px;outline:none;letter-spacing:1px;"
       placeholder="nvapi-... paste NVIDIA API key">
-    <button onclick="activateNeuron()" style="background:rgba(170,68,255,0.15);border:1px solid rgba(170,68,255,0.35);color:var(--purple);font-family:var(--mono);font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;">ACTIVATE</button>
+    <button id="neuron-activate-btn" style="background:rgba(170,68,255,0.15);border:1px solid rgba(170,68,255,0.35);color:var(--purple);font-family:var(--mono);font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;">ACTIVATE</button>
   </div>
   <div class="neuron-msgs" id="neuron-msgs">
     <!-- Initial message injected by JS -->
@@ -949,12 +949,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   </div>
   <div class="neuron-input-row">
     <input class="neuron-input" id="neuron-input" placeholder="Ask NEURON anything..." onkeydown="if(event.key==='Enter')sendNeuron()">
-    <button class="neuron-send" onclick="sendNeuron()">SEND ›</button>
+    <button class="neuron-send" id="neuron-send-btn">SEND ›</button>
   </div>
 </div>
 
 <!-- ZOOM MODAL -->
-<div class="zoom-modal" id="zoom-modal" onclick="handleModalClick(event)">
+<div class="zoom-modal" id="zoom-modal">
   <div class="zoom-modal-inner" id="zoom-inner">
     <div class="zoom-corner tl"></div><div class="zoom-corner tr"></div>
     <div class="zoom-corner bl"></div><div class="zoom-corner br"></div>
@@ -972,7 +972,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <span>NODE: <b id="zm-ip">192.168.1.20</b></span>
         <span>TIME: <b id="zm-time">--:--:--</b></span>
       </div>
-      <button class="zoom-close" onclick="closeZoom()">✕ CLOSE</button>
+      <button class="zoom-close" id="zoom-close-btn">✕ CLOSE</button>
     </div>
     <div class="zoom-canvas-wrap">
       <canvas id="zoom-canvas"></canvas>
@@ -2374,6 +2374,72 @@ async function neuronRespond(userMsg) {
 }
 
 
+
+
+// ═══════════════════════════════════════════════════
+//  VERCEL-SAFE EVENT WIRING — no inline onclick
+// ═══════════════════════════════════════════════════
+(function wireEvents() {
+  // NEURON toggle
+  const nt = document.getElementById('neuron-toggle');
+  if (nt) nt.addEventListener('click', function() { toggleNeuron(); });
+
+  // NEURON send
+  const ns = document.getElementById('neuron-send-btn');
+  if (ns) ns.addEventListener('click', function() { sendNeuron(); });
+
+  // NEURON input enter key
+  const ni = document.getElementById('neuron-input');
+  if (ni) ni.addEventListener('keydown', function(e) { if(e.key==='Enter') sendNeuron(); });
+
+  // NEURON activate
+  const na = document.getElementById('neuron-activate-btn');
+  if (na) na.addEventListener('click', function() { activateNeuron(); });
+
+  // Power graph click to expand
+  const pp = document.getElementById('pwr-panel');
+  if (pp) pp.addEventListener('click', function() { openPowerZoom(); });
+
+  // Power modal close
+  const pc = document.getElementById('pwr-close-btn');
+  if (pc) pc.addEventListener('click', function() { closePowerZoom(); });
+
+  // Power modal backdrop click
+  const pm = document.getElementById('pwr-modal');
+  if (pm) pm.addEventListener('click', function(e) { if(e.target===pm) closePowerZoom(); });
+
+  // Zoom modal close
+  const zc = document.getElementById('zoom-close-btn');
+  if (zc) zc.addEventListener('click', function() { closeZoom(); });
+
+  // Zoom modal backdrop
+  const zm = document.getElementById('zoom-modal');
+  if (zm) zm.addEventListener('click', function(e) { if(e.target===zm) closeZoom(); });
+
+  // Tabs
+  document.querySelectorAll('[data-tab]').forEach(function(t) {
+    t.addEventListener('click', function() { switchTab(t.getAttribute('data-tab')); });
+  });
+
+  // Cam boxes
+  [1,2,3,4].forEach(function(n) {
+    const box = document.getElementById('cam'+n+'-box');
+    if (box) box.addEventListener('click', function() { openZoom(n); });
+  });
+
+  // Alert dismiss
+  const ad = document.querySelector('.gbanner .btn-red');
+  if (ad) ad.addEventListener('click', function() { dismissAlert(); });
+
+  // Alert log clear
+  const alc = document.querySelector('#alog + * .btn-red, .cpanel-hd .btn-red');
+  // handled by inline onclick — leave as is for now
+
+  // Escape key closes modals
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closePowerZoom(); closeZoom(); }
+  });
+})();
 
 </script>
 </body>
