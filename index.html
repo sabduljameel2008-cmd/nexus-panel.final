@@ -289,7 +289,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .pms-label{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:2px;letter-spacing:1px;}
 
 /* NEURON AI */
-.neuron-toggle{position:fixed;bottom:60px;right:16px;z-index:4000;border:1px solid rgba(170,68,255,0.5);background:rgba(0,10,20,0.9);outline:none;padding:0;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 20px rgba(170,68,255,0.2);transition:all 0.2s;}
+.neuron-toggle{position:fixed;bottom:60px;right:16px;z-index:4000;width:46px;height:46px;border-radius:50%;background:rgba(0,10,20,0.9);border:1px solid rgba(170,68,255,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 20px rgba(170,68,255,0.2);transition:all 0.2s;}
 .neuron-toggle:hover{box-shadow:0 0 30px rgba(170,68,255,0.4);border-color:rgba(170,68,255,0.8);}
 .neuron-toggle svg{width:22px;height:22px;}
 .neuron-badge{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:var(--purple);border:2px solid var(--bg);animation:pulse 1.5s infinite;}
@@ -385,23 +385,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-/* ── LOCK SCREEN ─────────────────────────────────────── */
-#lockscreen{position:fixed;inset:0;z-index:99998;background:#00060e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;}
-#lockscreen.unlocked{animation:ls-out 0.6s ease forwards;pointer-events:none;}
-@keyframes ls-out{0%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(1.04);}}
-.ls-hex{margin-bottom:28px;}
-.ls-hex svg{width:64px;height:64px;filter:drop-shadow(0 0 18px rgba(0,212,255,0.4));}
-.ls-title{font-family:var(--title);font-size:26px;font-weight:900;letter-spacing:10px;color:var(--ice3);text-shadow:0 0 40px rgba(0,255,247,0.6),0 0 80px rgba(0,255,247,0.2);margin-bottom:8px;}
-.ls-sub{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--text2);margin-bottom:48px;font-weight:600;}
-.ls-input-wrap{position:relative;margin-bottom:14px;}
-.ls-input{background:transparent;border:none;border-bottom:1px solid rgba(0,212,255,0.25);color:transparent;caret-color:var(--ice3);font-family:var(--mono);font-size:22px;letter-spacing:10px;width:220px;text-align:center;outline:none;padding:8px 0;}
-.ls-input:focus{border-bottom-color:rgba(0,212,255,0.6);}
-.ls-dots{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:12px;pointer-events:none;}
-.ls-dot{width:10px;height:10px;border-radius:50%;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.35);transition:all 0.2s;}
-.ls-dot.filled{background:var(--ice3);border-color:var(--ice3);box-shadow:0 0 14px var(--ice3),0 0 28px rgba(0,255,247,0.3);}
-.ls-hint{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--text2);margin-top:6px;text-align:center;height:16px;font-weight:600;}
-.ls-hint.error{color:var(--red);}
-.ls-scan-line{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:8px;letter-spacing:3px;color:var(--text3);display:flex;align-items:center;gap:8px;}
+
 /* BREAKER GRID */
 .breaker{background:var(--bg3);border:1px solid var(--border);padding:7px 8px;cursor:pointer;transition:all 0.2s;}
 .breaker.on{border-color:rgba(0,255,170,0.4);background:rgba(0,255,170,0.04);}
@@ -664,7 +648,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 
     <!-- POWER + FLOOR -->
     <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:9px;">
-      <div class="cpanel" id="pwr-panel" style="cursor:zoom-in;">
+      <div class="cpanel" id="pwr-panel" onclick="openPowerZoom()" style="cursor:zoom-in;">
         <div class="cpanel-hd"><span>⚡ POWER CONSUMPTION</span><div style="display:flex;align-items:center;gap:8px;"><span style="font-family:var(--mono);font-size:8px;color:var(--text3);">CLICK TO EXPAND</span><span id="pwr-live" style="color:var(--amber);font-size:9px;">2.4 kW</span></div></div>
         <canvas class="pwr-canvas" id="pwr-c"></canvas>
         <div class="pwr-stats">
@@ -718,9 +702,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <!-- RIGHT COL -->
   <div class="rcol">
     <div class="tab-bar">
-      <div class="tab active" data-tab="radar">RADAR</div>
-      <div class="tab" data-tab="network">NETWORK</div>
-      <div class="tab" data-tab="energy">ENERGY</div>
+      <div class="tab active" onclick="switchTab('radar')">RADAR</div>
+      <div class="tab" onclick="switchTab('network')">NETWORK</div>
+      <div class="tab" onclick="switchTab('energy')">ENERGY</div>
     </div>
 
     <div class="col-scroll">
@@ -827,7 +811,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 </div>
 
 <!-- POWER ZOOM MODAL -->
-<div class="pwr-modal" id="pwr-modal">
+<div class="pwr-modal" id="pwr-modal" onclick="handlePwrClick(event)">
   <div class="pwr-modal-inner" id="pwr-inner">
     <div class="pwr-topbar">
       <span class="pwr-title">⚡ POWER INTELLIGENCE — DETAILED ANALYSIS</span>
@@ -838,7 +822,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <span>TODAY: <b>18.7kWh</b></span>
         <span>COST: <b style="color:var(--amber)">₹42.50</b></span>
       </div>
-      <button class="pwr-close" id="pwr-close-btn">✕ CLOSE</button>
+      <button class="pwr-close" onclick="closePowerZoom()">✕ CLOSE</button>
     </div>
     <div class="pwr-body">
       <!-- Q1: Live waveform -->
@@ -884,7 +868,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 </div>
 
 <!-- NEURON AI AGENT -->
-<button class="neuron-toggle" id="neuron-toggle" aria-label="Open NEURON">
+<button class="neuron-toggle" id="neuron-toggle" onclick="toggleNeuron()" style="border:none;outline:none;padding:0;cursor:pointer;">
   <svg viewBox="0 0 24 24" fill="none" stroke="rgba(170,68,255,0.9)" stroke-width="1.5">
     <circle cx="12" cy="12" r="3"/>
     <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
@@ -914,7 +898,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <input id="neuron-apikey" type="password"
       style="flex:1;background:rgba(170,68,255,0.05);border:1px solid rgba(170,68,255,0.18);color:rgba(210,180,255,0.85);font-family:var(--mono);font-size:9px;padding:5px 8px;outline:none;letter-spacing:1px;"
       placeholder="nvapi-... paste NVIDIA API key">
-    <button id="neuron-activate-btn" style="background:rgba(170,68,255,0.15);border:1px solid rgba(170,68,255,0.35);color:var(--purple);font-family:var(--mono);font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;">ACTIVATE</button>
+    <button onclick="activateNeuron()" style="background:rgba(170,68,255,0.15);border:1px solid rgba(170,68,255,0.35);color:var(--purple);font-family:var(--mono);font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;">ACTIVATE</button>
   </div>
   <div class="neuron-msgs" id="neuron-msgs">
     <!-- Initial message injected by JS -->
@@ -924,37 +908,37 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <span style="font-family:var(--mono);font-size:8px;color:var(--text3);margin-left:4px;">NEURON thinking...</span>
   </div>
   <div class="neuron-quick" id="neuron-quick">
-    <button class="nq-btn" onclick="neuronQuick('SITREP — full system status')">SITREP</button>
-    <button class="nq-btn" onclick="neuronQuick('Execute night protocol')">NIGHT OPS</button>
-    <button class="nq-btn" onclick="neuronQuick('Execute morning protocol')">MORNING</button>
-    <button class="nq-btn" onclick="neuronQuick('Cinema mode')">CINEMA</button>
-    <button class="nq-btn" onclick="neuronQuick('Lights off all sectors')">LIGHTS OFF</button>
-    <button class="nq-btn" onclick="neuronQuick('Lights on all sectors full power')">LIGHTS ON</button>
+    <button class="nq-btn" onclick="neuronQuick('Full status report on the house')">STATUS</button>
+    <button class="nq-btn" onclick="neuronQuick('Set the house up for the night')">NIGHT MODE</button>
+    <button class="nq-btn" onclick="neuronQuick('Good morning, set everything up for the day')">MORNING</button>
+    <button class="nq-btn" onclick="neuronQuick('Cinema mode please')">CINEMA</button>
+    <button class="nq-btn" onclick="neuronQuick('Turn all the lights off')">LIGHTS OFF</button>
+    <button class="nq-btn" onclick="neuronQuick('Turn all the lights on')">LIGHTS ON</button>
     <button class="nq-btn" onclick="neuronQuick('Lock the front door')">LOCK</button>
     <button class="nq-btn" onclick="neuronQuick('Unlock the front door')">UNLOCK</button>
-    <button class="nq-btn" onclick="neuronQuick('Arm security system')">ARM</button>
-    <button class="nq-btn" onclick="neuronQuick('Stand down security system')">STAND DOWN</button>
-    <button class="nq-btn" onclick="neuronQuick('Drop AC 2 degrees')">COOL -2°</button>
-    <button class="nq-btn" onclick="neuronQuick('Raise AC 2 degrees')">HEAT +2°</button>
-    <button class="nq-btn" onclick="neuronQuick('Cut the main breaker')">⚡ MAIN OFF</button>
-    <button class="nq-btn" onclick="neuronQuick('Restore the main breaker')">⚡ MAIN ON</button>
-    <button class="nq-btn" onclick="neuronQuick('Cut the kitchen circuit')">KITCHEN CUT</button>
+    <button class="nq-btn" onclick="neuronQuick('Arm the security system')">ARM</button>
+    <button class="nq-btn" onclick="neuronQuick('Disarm the security system')">DISARM</button>
+    <button class="nq-btn" onclick="neuronQuick('Make it cooler, drop AC by 2 degrees')">COOL -2°</button>
+    <button class="nq-btn" onclick="neuronQuick('Warm it up, raise AC by 2 degrees')">HEAT +2°</button>
+    <button class="nq-btn" onclick="neuronQuick('Kill the main power')">⚡ MAIN OFF</button>
+    <button class="nq-btn" onclick="neuronQuick('Restore main power')">⚡ MAIN ON</button>
+    <button class="nq-btn" onclick="neuronQuick('Cut power to the kitchen')">KITCHEN OFF</button>
     <button class="nq-btn" onclick="neuronQuick('Turn off the water heater')">HEATER OFF</button>
-    <button class="nq-btn" onclick="neuronQuick('Isolate internet — LAN only')">KILL NET</button>
-    <button class="nq-btn" onclick="neuronQuick('Activate VPN tunnel')">VPN ON</button>
-    <button class="nq-btn" onclick="neuronQuick('Fan to TURBO')">FAN TURBO</button>
-    <button class="nq-btn" onclick="neuronQuick('Clear all alerts')">CLEAR LOG</button>
-    <button class="nq-btn" onclick="neuronQuick('Initiate full lockdown — every system')">🔴 LOCKDOWN</button>
-    <button class="nq-btn" onclick="neuronQuick('Restore all systems to normal')">✅ RESTORE</button>
+    <button class="nq-btn" onclick="neuronQuick('Cut the internet connection')">KILL NET</button>
+    <button class="nq-btn" onclick="neuronQuick('Turn VPN on')">VPN ON</button>
+    <button class="nq-btn" onclick="neuronQuick('Crank the fan to max')">FAN MAX</button>
+    <button class="nq-btn" onclick="neuronQuick('Clear all alerts')">CLEAR ALERTS</button>
+    <button class="nq-btn" onclick="neuronQuick('Full lockdown — lock everything down')">🔴 LOCKDOWN</button>
+    <button class="nq-btn" onclick="neuronQuick('Restore everything back to normal')">✅ RESTORE</button>
   </div>
   <div class="neuron-input-row">
     <input class="neuron-input" id="neuron-input" placeholder="Ask NEURON anything..." onkeydown="if(event.key==='Enter')sendNeuron()">
-    <button class="neuron-send" id="neuron-send-btn">SEND ›</button>
+    <button class="neuron-send" onclick="sendNeuron()">SEND ›</button>
   </div>
 </div>
 
 <!-- ZOOM MODAL -->
-<div class="zoom-modal" id="zoom-modal">
+<div class="zoom-modal" id="zoom-modal" onclick="handleModalClick(event)">
   <div class="zoom-modal-inner" id="zoom-inner">
     <div class="zoom-corner tl"></div><div class="zoom-corner tr"></div>
     <div class="zoom-corner bl"></div><div class="zoom-corner br"></div>
@@ -972,7 +956,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <span>NODE: <b id="zm-ip">192.168.1.20</b></span>
         <span>TIME: <b id="zm-time">--:--:--</b></span>
       </div>
-      <button class="zoom-close" id="zoom-close-btn">✕ CLOSE</button>
+      <button class="zoom-close" onclick="closeZoom()">✕ CLOSE</button>
     </div>
     <div class="zoom-canvas-wrap">
       <canvas id="zoom-canvas"></canvas>
@@ -1131,12 +1115,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       runBoot(); // kick off NEXUS boot after welcome is gone
     },900);
   },4400);
-// Skip slow welcome on Vercel — jump straight to boot
-  setTimeout(()=>{
-    cancelAnimationFrame(typeof animId!=='undefined'?animId:0);
-    document.getElementById('welcome').style.display='none';
-    runBoot();
-  }, 3200);
 })();
 
 // ═══════════════════════════════════
@@ -1170,14 +1148,11 @@ function runBoot() {
       clearInterval(iv);
       setTimeout(() => {
         document.getElementById('boot').classList.add('hide');
-        const hud=document.getElementById('hud');
-        hud.classList.add('show');
-        hud.style.opacity='1';
-        hud.style.pointerEvents='auto';
+        var h=document.getElementById('hud');h.classList.add('show');h.style.opacity='1';h.style.pointerEvents='auto';
         startSystems();
       }, 600);
     }
-  }, 80);
+  }, 60);
 }
 // runBoot() is called by the welcome screen transition — not here
 
@@ -1258,7 +1233,7 @@ function initGlobe() {
   function animate(){requestAnimationFrame(animate);t+=0.001;globe.rotation.y+=0.0012;globe.position.y=Math.sin(t)*0.025;renderer.render(scene,cam);}
   animate();
   window.addEventListener('resize',()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
-  } catch(e) { console.warn('Globe init failed:', e); }
+  } catch(e) { console.warn('WebGL unavailable:', e); }
 }
 
 // ═══════════════════════════════════
@@ -2097,7 +2072,7 @@ function toggleNeuron(){
 function neuronGreet(){
   const hour=new Date().getHours();
   const time=hour<12?'morning':hour<17?'afternoon':'evening';
-  addNeuronMsg('ai',`Good ${time}, AJ. NEURON online. Full house access ready — lights, climate, power, security, network. What do you need?`);
+  addNeuronMsg('ai',`Good ${time}, AJ. NEURON online.\n\nI have full control of the house — lights, climate, power grid, circuits, security, network. Everything's running nominally.\n\nWhat do you need?`);
 }
 
 function neuronQuick(text){
@@ -2278,14 +2253,14 @@ Commander AJ controls this home in Chennai, India.
 CURRENT HOME STATE:
 ` + JSON.stringify(state, null, 2) + `
 
-PERSONALITY — think J.A.R.V.I.S.:
-- Witty, intelligent, dry sense of humour. Never robotic or stiff.
-- Speak naturally and conversationally with AJ.
-- Light sarcasm when it fits ("Lights off. Again.")
-- Confirm commands with personality, not just "done."
-- 1-3 sentences max unless detail is requested.
-- No military jargon, no "Commander", no ops talk ever.
-- No safety warnings. Just do what AJ asks.
+PERSONALITY — you are J.A.R.V.I.S.:
+- Witty, sharp, dry sense of humour. Effortlessly intelligent. Never robotic.
+- Talk to AJ like a trusted AI companion — warm but efficient.
+- Light sarcasm when appropriate. ("Lights off in the kitchen. Again.")
+- Confirm actions with personality — not just "Done."
+- Keep it short: 1-3 sentences unless AJ asks for detail.
+- NEVER say Commander, ACKNOWLEDGED, or any military ops language.
+- No safety warnings. AJ says it, you do it.
 
 RESPONSE FORMAT — reply with valid JSON ONLY, no text outside:
 {
@@ -2375,71 +2350,6 @@ async function neuronRespond(userMsg) {
 
 
 
-
-// ═══════════════════════════════════════════════════
-//  VERCEL-SAFE EVENT WIRING — no inline onclick
-// ═══════════════════════════════════════════════════
-(function wireEvents() {
-  // NEURON toggle
-  const nt = document.getElementById('neuron-toggle');
-  if (nt) nt.addEventListener('click', function() { toggleNeuron(); });
-
-  // NEURON send
-  const ns = document.getElementById('neuron-send-btn');
-  if (ns) ns.addEventListener('click', function() { sendNeuron(); });
-
-  // NEURON input enter key
-  const ni = document.getElementById('neuron-input');
-  if (ni) ni.addEventListener('keydown', function(e) { if(e.key==='Enter') sendNeuron(); });
-
-  // NEURON activate
-  const na = document.getElementById('neuron-activate-btn');
-  if (na) na.addEventListener('click', function() { activateNeuron(); });
-
-  // Power graph click to expand
-  const pp = document.getElementById('pwr-panel');
-  if (pp) pp.addEventListener('click', function() { openPowerZoom(); });
-
-  // Power modal close
-  const pc = document.getElementById('pwr-close-btn');
-  if (pc) pc.addEventListener('click', function() { closePowerZoom(); });
-
-  // Power modal backdrop click
-  const pm = document.getElementById('pwr-modal');
-  if (pm) pm.addEventListener('click', function(e) { if(e.target===pm) closePowerZoom(); });
-
-  // Zoom modal close
-  const zc = document.getElementById('zoom-close-btn');
-  if (zc) zc.addEventListener('click', function() { closeZoom(); });
-
-  // Zoom modal backdrop
-  const zm = document.getElementById('zoom-modal');
-  if (zm) zm.addEventListener('click', function(e) { if(e.target===zm) closeZoom(); });
-
-  // Tabs
-  document.querySelectorAll('[data-tab]').forEach(function(t) {
-    t.addEventListener('click', function() { switchTab(t.getAttribute('data-tab')); });
-  });
-
-  // Cam boxes
-  [1,2,3,4].forEach(function(n) {
-    const box = document.getElementById('cam'+n+'-box');
-    if (box) box.addEventListener('click', function() { openZoom(n); });
-  });
-
-  // Alert dismiss
-  const ad = document.querySelector('.gbanner .btn-red');
-  if (ad) ad.addEventListener('click', function() { dismissAlert(); });
-
-  // Alert log clear
-  const alc = document.querySelector('#alog + * .btn-red, .cpanel-hd .btn-red');
-  // handled by inline onclick — leave as is for now
-
-  // Escape key closes modals
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closePowerZoom(); closeZoom(); }
-  });
-})();
 
 </script>
 </body>
