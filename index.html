@@ -1131,6 +1131,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
       runBoot(); // kick off NEXUS boot after welcome is gone
     },900);
   },4400);
+// Skip slow welcome on Vercel — jump straight to boot
+  setTimeout(()=>{
+    cancelAnimationFrame(typeof animId!=='undefined'?animId:0);
+    document.getElementById('welcome').style.display='none';
+    runBoot();
+  }, 3200);
 })();
 
 // ═══════════════════════════════════
@@ -1164,11 +1170,14 @@ function runBoot() {
       clearInterval(iv);
       setTimeout(() => {
         document.getElementById('boot').classList.add('hide');
-        document.getElementById('hud').classList.add('show');
+        const hud=document.getElementById('hud');
+        hud.classList.add('show');
+        hud.style.opacity='1';
+        hud.style.pointerEvents='auto';
         startSystems();
       }, 600);
     }
-  }, 180);
+  }, 80);
 }
 // runBoot() is called by the welcome screen transition — not here
 
@@ -1176,6 +1185,7 @@ function runBoot() {
 //  GLOBE
 // ═══════════════════════════════════
 function initGlobe() {
+  try {
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(42, window.innerWidth/window.innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('globe-canvas'),alpha:true,antialias:true});
@@ -1248,6 +1258,7 @@ function initGlobe() {
   function animate(){requestAnimationFrame(animate);t+=0.001;globe.rotation.y+=0.0012;globe.position.y=Math.sin(t)*0.025;renderer.render(scene,cam);}
   animate();
   window.addEventListener('resize',()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+  } catch(e) { console.warn('Globe init failed:', e); }
 }
 
 // ═══════════════════════════════════
@@ -2086,7 +2097,7 @@ function toggleNeuron(){
 function neuronGreet(){
   const hour=new Date().getHours();
   const time=hour<12?'morning':hour<17?'afternoon':'evening';
-  addNeuronMsg('ai',`Good ${time}, AJ. NEURON online. Full house access ready. What do you need?`);
+  addNeuronMsg('ai',`Good ${time}, AJ. NEURON online. Full house access ready — lights, climate, power, security, network. What do you need?`);
 }
 
 function neuronQuick(text){
@@ -2361,7 +2372,6 @@ async function neuronRespond(userMsg) {
     addNeuronMsg('ai', `NEURON offline — ${err.message}`);
   }
 }
-
 
 
 
