@@ -2418,11 +2418,11 @@ let lsBuffer = '';
 function lsRenderDots(len) {
   const dots = document.getElementById('ls-dots');
   if (!dots) return;
-  let html = '';
+  let h = '';
   for (let i = 0; i < LS_CODE.length; i++) {
-    html += '<div class="ls-dot' + (i < len ? ' filled' : '') + '"></div>';
+    h += '<div class="ls-dot' + (i < len ? ' filled' : '') + '"></div>';
   }
-  dots.innerHTML = html;
+  dots.innerHTML = h;
 }
 
 function lsKey(ch) {
@@ -2431,9 +2431,7 @@ function lsKey(ch) {
   lsRenderDots(lsBuffer.length);
   const hint = document.getElementById('ls-hint');
   if (hint) { hint.textContent = 'ENTER ACCESS CODE'; hint.style.color = ''; }
-  if (lsBuffer.length === LS_CODE.length) {
-    setTimeout(lsSubmit, 150);
-  }
+  if (lsBuffer.length === LS_CODE.length) setTimeout(lsSubmit, 150);
 }
 
 function lsDel() {
@@ -2447,44 +2445,39 @@ function lsSubmit() {
     if (hint) { hint.textContent = 'ACCESS GRANTED'; hint.style.color = 'var(--green)'; }
     lsRenderDots(LS_CODE.length);
     const ls = document.getElementById('lockscreen');
-    if (ls) {
-      ls.classList.add('unlocked');
-      setTimeout(function() { ls.style.display = 'none'; }, 700);
-    }
+    if (ls) { ls.classList.add('unlocked'); setTimeout(function(){ ls.style.display='none'; }, 700); }
   } else {
     lsBuffer = '';
     lsRenderDots(0);
     if (hint) { hint.textContent = 'ACCESS DENIED'; hint.style.color = 'var(--red)'; }
-    setTimeout(function() {
-      const h = document.getElementById('ls-hint');
-      if (h) { h.textContent = 'ENTER ACCESS CODE'; h.style.color = ''; }
+    setTimeout(function(){
+      const h2 = document.getElementById('ls-hint');
+      if (h2) { h2.textContent = 'ENTER ACCESS CODE'; h2.style.color = ''; }
     }, 1200);
   }
 }
 
-// Wire up keypad using event delegation — works on all browsers including strict CSP
-document.addEventListener('DOMContentLoaded', function() {
+(function initLS() {
   lsRenderDots(0);
-  const keypad = document.getElementById('ls-keypad');
-  if (keypad) {
-    keypad.addEventListener('click', function(e) {
-      const btn = e.target.closest('[data-key]');
+  const pad = document.getElementById('ls-keypad');
+  if (pad) {
+    pad.addEventListener('click', function(ev) {
+      const btn = ev.target.closest('[data-key]');
       if (!btn) return;
       const k = btn.getAttribute('data-key');
-      if (k === 'DEL') lsDel();
-      else lsKey(k);
+      if (k === 'DEL') lsDel(); else lsKey(k);
     });
   }
-  // Also support keyboard input
-  document.addEventListener('keydown', function(e) {
+  document.addEventListener('keydown', function(ev) {
     const ls = document.getElementById('lockscreen');
     if (!ls || ls.style.display === 'none') return;
-    if (e.key === 'Backspace') { lsDel(); return; }
-    if (e.key === 'Enter') { lsSubmit(); return; }
+    if (ev.key === 'Backspace') { lsDel(); return; }
+    if (ev.key === 'Enter') { lsSubmit(); return; }
     const allowed = '0123456789SAJ.';
-    if (allowed.includes(e.key.toUpperCase())) lsKey(e.key.toUpperCase());
+    const k = ev.key.toUpperCase();
+    if (allowed.indexOf(k) !== -1) lsKey(k);
   });
-});
+}());
 
 lsRenderDots(0);
 
