@@ -435,21 +435,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
   <div class="ls-dots" id="ls-dots"></div>
   <div class="ls-hint" id="ls-hint">ENTER ACCESS CODE</div>
   <div id="ls-keypad" style="display:grid;grid-template-columns:repeat(3,64px);gap:8px;margin-top:18px;">
-    <button class="ls-key" onclick="lsKey('1')">1</button>
-    <button class="ls-key" onclick="lsKey('2')">2</button>
-    <button class="ls-key" onclick="lsKey('3')">3</button>
-    <button class="ls-key" onclick="lsKey('4')">4</button>
-    <button class="ls-key" onclick="lsKey('5')">5</button>
-    <button class="ls-key" onclick="lsKey('6')">6</button>
-    <button class="ls-key" onclick="lsKey('7')">7</button>
-    <button class="ls-key" onclick="lsKey('8')">8</button>
-    <button class="ls-key" onclick="lsKey('9')">9</button>
-    <button class="ls-key" onclick="lsKey('S')" style="font-size:13px;">S</button>
-    <button class="ls-key" onclick="lsKey('0')">0</button>
-    <button class="ls-key ls-key-del" onclick="lsDel()">⌫</button>
-    <button class="ls-key" onclick="lsKey('.')">.</button>
-    <button class="ls-key" onclick="lsKey('A')" style="font-size:13px;">A</button>
-    <button class="ls-key" onclick="lsKey('J')" style="font-size:13px;">J</button>
+    <button class="ls-key" data-key="1">1</button>
+    <button class="ls-key" data-key="2">2</button>
+    <button class="ls-key" data-key="3">3</button>
+    <button class="ls-key" data-key="4">4</button>
+    <button class="ls-key" data-key="5">5</button>
+    <button class="ls-key" data-key="6">6</button>
+    <button class="ls-key" data-key="7">7</button>
+    <button class="ls-key" data-key="8">8</button>
+    <button class="ls-key" data-key="9">9</button>
+    <button class="ls-key" data-key="S" style="font-size:13px;">S</button>
+    <button class="ls-key" data-key="0">0</button>
+    <button class="ls-key ls-key-del" data-key="DEL">⌫</button>
+    <button class="ls-key" data-key=".">.</button>
+    <button class="ls-key" data-key="A" style="font-size:13px;">A</button>
+    <button class="ls-key" data-key="J" style="font-size:13px;">J</button>
   </div>
   <div class="ls-scan-line" style="margin-top:24px;">NEXUS SECURITY LAYER v2.4</div>
 </div>
@@ -2418,9 +2418,11 @@ let lsBuffer = '';
 function lsRenderDots(len) {
   const dots = document.getElementById('ls-dots');
   if (!dots) return;
-  dots.innerHTML = Array.from({length: LS_CODE.length}, (_, i) =>
-    '<div class="ls-dot ' + (i < len ? 'filled' : '') + '"></div>'
-  ).join('');
+  let html = '';
+  for (let i = 0; i < LS_CODE.length; i++) {
+    html += '<div class="ls-dot' + (i < len ? ' filled' : '') + '"></div>';
+  }
+  dots.innerHTML = html;
 }
 
 function lsKey(ch) {
@@ -2428,10 +2430,9 @@ function lsKey(ch) {
   lsBuffer += ch;
   lsRenderDots(lsBuffer.length);
   const hint = document.getElementById('ls-hint');
-  hint.textContent = 'ENTER ACCESS CODE';
-  hint.style.color = '';
+  if (hint) { hint.textContent = 'ENTER ACCESS CODE'; hint.style.color = ''; }
   if (lsBuffer.length === LS_CODE.length) {
-    setTimeout(lsSubmit, 120);
+    setTimeout(lsSubmit, 150);
   }
 }
 
@@ -2443,23 +2444,47 @@ function lsDel() {
 function lsSubmit() {
   const hint = document.getElementById('ls-hint');
   if (lsBuffer === LS_CODE) {
-    hint.textContent = 'ACCESS GRANTED';
-    hint.style.color = 'var(--green)';
+    if (hint) { hint.textContent = 'ACCESS GRANTED'; hint.style.color = 'var(--green)'; }
     lsRenderDots(LS_CODE.length);
     const ls = document.getElementById('lockscreen');
-    ls.classList.add('unlocked');
-    setTimeout(() => { ls.style.display = 'none'; }, 700);
+    if (ls) {
+      ls.classList.add('unlocked');
+      setTimeout(function() { ls.style.display = 'none'; }, 700);
+    }
   } else {
     lsBuffer = '';
     lsRenderDots(0);
-    hint.textContent = 'ACCESS DENIED';
-    hint.style.color = 'var(--red)';
-    setTimeout(() => {
-      hint.textContent = 'ENTER ACCESS CODE';
-      hint.style.color = '';
+    if (hint) { hint.textContent = 'ACCESS DENIED'; hint.style.color = 'var(--red)'; }
+    setTimeout(function() {
+      const h = document.getElementById('ls-hint');
+      if (h) { h.textContent = 'ENTER ACCESS CODE'; h.style.color = ''; }
     }, 1200);
   }
 }
+
+// Wire up keypad using event delegation — works on all browsers including strict CSP
+document.addEventListener('DOMContentLoaded', function() {
+  lsRenderDots(0);
+  const keypad = document.getElementById('ls-keypad');
+  if (keypad) {
+    keypad.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-key]');
+      if (!btn) return;
+      const k = btn.getAttribute('data-key');
+      if (k === 'DEL') lsDel();
+      else lsKey(k);
+    });
+  }
+  // Also support keyboard input
+  document.addEventListener('keydown', function(e) {
+    const ls = document.getElementById('lockscreen');
+    if (!ls || ls.style.display === 'none') return;
+    if (e.key === 'Backspace') { lsDel(); return; }
+    if (e.key === 'Enter') { lsSubmit(); return; }
+    const allowed = '0123456789SAJ.';
+    if (allowed.includes(e.key.toUpperCase())) lsKey(e.key.toUpperCase());
+  });
+});
 
 lsRenderDots(0);
 
